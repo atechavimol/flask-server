@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request
-from wtforms import Form, StringField, validators, SubmitField
+from wtforms import Form, StringField, validators, SubmitField, TextAreaField
 
 app = Flask(__name__)
 
+
 class InputForm(Form):
-    python_file = StringField('Python File')
+    python_file = TextAreaField('Python File')
 
     @app.route('/', methods=['GET', 'POST'])
     def index():
@@ -15,6 +16,7 @@ class InputForm(Form):
             # instead of this, do the load balancing
             return render_template('index.html', form=form)
         return render_template('index.html', form=form)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='localhost')
