@@ -18,5 +18,8 @@ while True:
         res = ""
         while serial.poll(TIMEOUT):
             res+=(sys.stdin.read(1))
-            print(" hi from pico ")
-        print("got:",res)
+            
+        if res == "new job":
+            print("new job")
+            led.toggle()
+            print("done")
