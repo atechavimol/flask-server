@@ -96,7 +96,7 @@ class Sender:
       if job not in self.picos.values():
         if self.picos[pico][1] == None:
           self.picos[pico] = job
-          self.picos[pico].write("new job".encode('utf-8')'))
+          self.picos[pico].write("new job".encode('utf-8'))
           cmd_str = f'rshell connect {self.picos[pico][0]}'
           subprocess.run(cmd_str, shell=True)
           cmd_str = f'rshell cp {job} /pyboard'

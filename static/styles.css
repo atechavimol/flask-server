@@ -1,4 +1,22 @@
 textarea {
-    width: 800px;
-    height: 500px;
+  width: 800px;
+  height: 500px;
+}
+
+.vertical-padding {
+  margin: 3em 5em;
+}
+
+.body {
+  background-color: #c31d4a;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 5em 5em;
 }
