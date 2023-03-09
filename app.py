@@ -37,6 +37,7 @@ def send_job_to_picos(jobNum):
     # send the job to one of the available ones
     jobFilename = {1: 'test1.py', 2: 'test2.py', 3: 'test3.py', 4: 'test4.py'}
 
+    print(jobFilename[jobNum])
     #error = Sender.new_job(jobFilename[jobNum])
-    if error != None:
-        print(error)
+    # if error != None:
+    #     print(error)

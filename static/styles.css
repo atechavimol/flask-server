@@ -20,3 +20,7 @@ textarea {
   grid-template-columns: 1fr 1fr;
   padding: 5em 5em;
 }
+
+.card:hover {
+  background-color: #69b8e9 !important;
+}
