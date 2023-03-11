@@ -4,6 +4,11 @@
 import time
 import serial
 import subprocess
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(18,GPIO.OUT)
+
 
 class Sender:
   ser1 = serial.Serial(
@@ -48,10 +53,10 @@ class Sender:
   ser4_name = '/dev/ttyACM3'
 
   picos = {}
-  picos[ser1] = (ser1_name, None)
-  picos[ser2] = (ser2_name, None)
-  picos[ser3] = (ser3_name, None)
-  picos[ser4] = (ser4_name, None)
+  picos.append(ser1)
+  picos.append(ser2)
+  picos.append(ser3)
+  picos.append(ser4)
   
 
   """
@@ -64,25 +69,33 @@ class Sender:
       bytes_to_read3 = self.ser3.inWaiting()
       bytes_to_read4 = self.ser4.inWaiting()
 
+      self.ser1.write("job".encode('utf-8'))
       if (bytes_to_read1 > 0):
         result = self.ser1.read(bytes_to_read1)
-        if result == 'done':
-          self.picos[self.ser1] = None
+        if result == 'NO':
+          # turn light off
+          pass
 
+      self.ser2.write("job".encode('utf-8'))
       if (bytes_to_read2 > 0):
         result = self.ser2.read(bytes_to_read2)
-        if result == 'done':
-          self.picos[self.ser2] = None
+        if result == 'NO':
+          # turn light off
+          pass
 
+      self.ser3.write("job".encode('utf-8'))
       if (bytes_to_read3 > 0):
         result = self.ser3.read(bytes_to_read3)
-        if result == 'done':
-          self.picos[self.ser3] = None
+        if result == 'NO':
+          # turn light off
+          pass
 
+      self.ser4.write("job".encode('utf-8'))
       if (bytes_to_read4 > 0):
         result = self.ser4.read(bytes_to_read4)
-        if result == 'done':
-          self.picos[self.ser4] = None
+        if result == 'NO':
+          # turn light off
+          GPIO.output(18,GPIO.LOW)
 
 
   """
@@ -93,16 +106,12 @@ class Sender:
   def new_job(self, job):
     # send the job to one of the available ones
     for pico in self.picos:
-      if job not in self.picos.values():
-        if self.picos[pico][1] == None:
-          self.picos[pico] = job
-          self.picos[pico].write("new job".encode('utf-8'))
-          cmd_str = f'rshell connect {self.picos[pico][0]}'
-          subprocess.run(cmd_str, shell=True)
-          cmd_str = f'rshell cp {job} /pyboard'
-          subprocess.run(cmd_str, shell=True)
-          return None
-        else:
-          return "pico is busy"
-      else:
-        break
+        pico.write("job".encode('utf-8'))
+        bytes_to_read = pico.inWaiting()
+        if (bytes_to_read > 0):
+          result = pico.read(bytes_to_read)
+          if result == 'No':
+            # turn light on
+            GPIO.output(18,GPIO.HIGH)
+            pico.write(job.encode('utf-8'))
+        return None
